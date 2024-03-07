@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "lib": ["dom", "es2015", "es2016", "es2017", "es2018", "es2019", "es2020", "esnext"],
+      "allowJs": true,
+      "skipLibCheck": true,
+      "strict": true,
+      "forceConsistentCasingInFileNames": true,
+      "module": "esnext",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "types": ["react", "react-dom"],
+      "jsx": "react",
+      "baseUrl": "./src",
+      "paths": {
+        "*": ["types/*"]
+      },
+      "typeRoots": ["node_modules/@types", "types"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "src/types.d.ts"],
+    "exclude": ["node_modules"]
+  }
+  
