@@ -1,87 +1,79 @@
 // src/components/EmployeeTable.tsx
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../app/reducers";
-import {
-  removeEmployees,
-  toggleSelectEmployee,
-  updateEmployee,
-} from "../features/employeeSlice";
-import { updateSelectedEmployeesAsync } from "../features/companySlice";
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../app/reducers'
+import { updateSelectedEmployeesAsync } from '../features/companySlice'
+import { removeEmployees, toggleSelectEmployee, updateEmployee } from '../features/employeeSlice'
 interface EmployeeTableProps {
-  visibleEmployees:number
+  visibleEmployees: number
 }
-const EmployeeTable: React.FC<EmployeeTableProps> = ({visibleEmployees}) =>{
-  const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
+const EmployeeTable: React.FC<EmployeeTableProps> = ({ visibleEmployees }) => {
+  const dispatch = useDispatch()
+  const companies = useSelector((state: RootState) => state.company.companies)
 
-  const selectedEmployeeIds: number[] = [];
+  const selectedEmployeeIds: number[] = []
   companies.forEach((company) => {
     if (company.isSelected) {
-      selectedEmployeeIds.push(...company.employees);
+      selectedEmployeeIds.push(...company.employees)
     }
-  });
+  })
 
   const employees = useSelector((state: RootState) =>
     selectedEmployeeIds.map((employeeId) =>
       state.employee.employees.find((e) => e.id === employeeId)
     )
-  );
+  )
 
-  const [editableEmployeeId, setEditableEmployeeId] = useState<number | null>(
-    null
-  );
+  const [editableEmployeeId, setEditableEmployeeId] = useState<number | null>(null)
 
   const [editedEmployeeFields, setEditedEmployeeFields] = useState<{
-    lastName: string;
-    firstName: string;
-    position: string;
-  }>({ lastName: "", firstName: "", position: "" });
+    lastName: string
+    firstName: string
+    position: string
+  }>({ lastName: '', firstName: '', position: '' })
 
   const handleRemoveEmployees = () => {
     const selectedEmployeeIds = employees
       ?.filter((employee) => employee?.isEmployeeSelected)
       .map((employee) => employee?.id)
-      .filter((id): id is number => id !== undefined);
+      .filter((id): id is number => id !== undefined)
 
-    const selectedEmployeeIdsCopy = [...selectedEmployeeIds];
+    const selectedEmployeeIdsCopy = [...selectedEmployeeIds]
 
-    dispatch(removeEmployees(selectedEmployeeIdsCopy));
+    dispatch(removeEmployees(selectedEmployeeIdsCopy))
     dispatch(
       toggleSelectEmployee({
         employeeIds: selectedEmployeeIdsCopy,
         isEmployeeSelected: false,
       })
-    );
-    dispatch(updateSelectedEmployeesAsync() as any);
+    )
+    dispatch(updateSelectedEmployeesAsync() as any)
 
-    setEditableEmployeeId(null);
-  };
+    setEditableEmployeeId(null)
+  }
 
   const handleSelectEmployee = (employeeId: number, selected: boolean) => {
-    setEditableEmployeeId(employeeId);
+    setEditableEmployeeId(employeeId)
     dispatch(
       toggleSelectEmployee({
         employeeIds: [employeeId],
         isEmployeeSelected: selected,
       })
-    );
-  };
+    )
+  }
 
   const handleEditEmployee = (employeeId: number) => {
-    setEditableEmployeeId(employeeId);
+    setEditableEmployeeId(employeeId)
 
-    const employeeToEdit = employees.find(
-      (employee) => employee?.id === employeeId
-    );
+    const employeeToEdit = employees.find((employee) => employee?.id === employeeId)
     if (employeeToEdit) {
       setEditedEmployeeFields({
         lastName: employeeToEdit.lastName,
         firstName: employeeToEdit.firstName,
         position: employeeToEdit.position,
-      });
+      })
     }
-  };
+  }
 
   const handleSaveEditedEmployee = (employeeId: number) => {
     dispatch(
@@ -93,39 +85,38 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({visibleEmployees}) =>{
         companyId: 0, // TODO: did not provide the correct company identifier
         isEmployeeSelected: false,
       })
-    );
+    )
 
-    setEditableEmployeeId(null);
+    setEditableEmployeeId(null)
     setEditedEmployeeFields({
-      lastName: "",
-      firstName: "",
-      position: "",
-    });
-  };
+      lastName: '',
+      firstName: '',
+      position: '',
+    })
+  }
 
   const handleCancelEdit = () => {
-    setEditableEmployeeId(null);
+    setEditableEmployeeId(null)
     setEditedEmployeeFields({
-      lastName: "",
-      firstName: "",
-      position: "",
-    });
-  };
+      lastName: '',
+      firstName: '',
+      position: '',
+    })
+  }
   const handleSelectAllEmployees = () => {
- 
-    const allEmployeeIds = companies.map((company) => company.employees).flat();
+    const allEmployeeIds = companies.map((company) => company.employees).flat()
 
     dispatch(
       toggleSelectEmployee({
         employeeIds: allEmployeeIds,
         isEmployeeSelected: true,
       })
-    );
-  };
-  
+    )
+  }
+
   useEffect(() => {
-    dispatch(updateSelectedEmployeesAsync() as any);
-  }, [selectedEmployeeIds, employees]);
+    dispatch(updateSelectedEmployeesAsync() as any)
+  }, [selectedEmployeeIds, employees])
 
   return (
     <div>
@@ -150,19 +141,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({visibleEmployees}) =>{
             <tbody>
               {employees.slice(0, visibleEmployees).map((employee) =>
                 employee ? (
-                  <tr
-                    key={employee.id}
-                    className={employee?.isEmployeeSelected ? "selected" : ""}
-                  >
+                  <tr key={employee.id} className={employee?.isEmployeeSelected ? 'selected' : ''}>
                     <td>
                       <input
                         type="checkbox"
                         checked={employee?.isEmployeeSelected}
                         onChange={() =>
-                          handleSelectEmployee(
-                            employee?.id || 0,
-                            !employee?.isEmployeeSelected
-                          )
+                          handleSelectEmployee(employee?.id || 0, !employee?.isEmployeeSelected)
                         }
                       />
                     </td>
@@ -218,17 +203,18 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({visibleEmployees}) =>{
                       {editableEmployeeId === employee?.id ? (
                         <>
                           <button
-                          className="button"
-                            onClick={() =>
-                              handleSaveEditedEmployee(employee?.id || 0)
-                            }
+                            className="button"
+                            onClick={() => handleSaveEditedEmployee(employee?.id || 0)}
                           >
                             Сохранить
                           </button>
-                          <button  className="button"onClick={handleCancelEdit}>Отмена</button>
+                          <button className="button" onClick={handleCancelEdit}>
+                            Отмена
+                          </button>
                         </>
                       ) : (
-                        <button className="button"
+                        <button
+                          className="button"
                           onClick={() => handleEditEmployee(employee?.id || 0)}
                         >
                           Редактировать
@@ -243,7 +229,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({visibleEmployees}) =>{
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default EmployeeTable;
+export default EmployeeTable

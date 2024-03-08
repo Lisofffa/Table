@@ -1,6 +1,4 @@
-/* src/components/CompanyTable.css */
-
-.button {
+button {
   border: 1px solid #4768fa;
   background-color: #4768fa;
   color: white;
@@ -11,7 +9,7 @@
   transition: ease all 0.3s;
 }
 
-.button:hover {
+button:hover {
   background-color: #153ff9;
   border-color: #153ff9;
 }
@@ -43,7 +41,6 @@ tr.selected {
   transition: ease all 0.3s;
 }
 
-input,
 button {
   height: 3rem;
   margin: 5px;
@@ -55,8 +52,6 @@ input {
   padding: 8px;
   border-radius: 5px;
   background: #fff;
-}
-
-.form-container {
-  margin-top: 20px;
+  height: 1rem;
+  margin: 5px;
 }

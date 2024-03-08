@@ -1,32 +1,31 @@
 // src/App.tsx
-import CompanyTable from "./components/CompanyTable";
-import EmployeeTable from "./components/EmployeeTable";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
+import CompanyTable from './components/CompanyTable'
+import EmployeeTable from './components/EmployeeTable'
 
-import "./App.css";
+import './App.css'
 const App: React.FC = () => {
-  const [visibleCompanies, setVisibleCompanies] = useState<number>(4); 
-  const [visibleEmployees, setVisibleEmployees] = useState<number>(7); 
+  const [visibleCompanies, setVisibleCompanies] = useState<number>(7)
+  const [visibleEmployees, setVisibleEmployees] = useState<number>(10)
   const handleScroll = () => {
-    const scrolledHeight = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-  
+    const scrolledHeight = window.scrollY
+    const windowHeight = window.innerHeight
+    const documentHeight = document.documentElement.scrollHeight
+
     if (scrolledHeight + windowHeight >= documentHeight) {
-     
-      setVisibleCompanies((prev) => prev + 4); 
-      setVisibleEmployees((prev) => prev + 7); 
+      setVisibleCompanies((prev) => prev + 4)
+      setVisibleEmployees((prev) => prev + 7)
     }
-  };
-  
+  }
+
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll)
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
   return (
-    <div className="App">
+    <div className="app">
       <div className="table-container">
         <CompanyTable visibleCompanies={visibleCompanies} />
       </div>
@@ -34,7 +33,7 @@ const App: React.FC = () => {
         <EmployeeTable visibleEmployees={visibleEmployees} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

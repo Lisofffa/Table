@@ -1,47 +1,46 @@
 // src/components/CompanyTable.tsx
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../app/reducers";
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../app/reducers'
 import {
-  Company,
   addCompany,
+  addEmployeeToCompany,
+  Company,
   removeCompanies,
   toggleSelectCompany,
-  updateSelectedEmployeesAsync,
   updateCompany,
-  addEmployeeToCompany,
-} from "../features/companySlice";
-import { addEmployee } from "../features/employeeSlice";
-import "./CompanyTable.css";
+  updateSelectedEmployeesAsync,
+} from '../features/companySlice'
+import { addEmployee } from '../features/employeeSlice'
+import './CompanyTable.css'
 
 interface CompanyForm {
-  name: string;
-  address: string;
-
+  name: string
+  address: string
 }
 interface CompanyTableProps {
-  visibleCompanies:number
+  visibleCompanies: number
 }
 
-const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
-  const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  
+const CompanyTable: React.FC<CompanyTableProps> = ({ visibleCompanies }) => {
+  const dispatch = useDispatch()
+  const companies = useSelector((state: RootState) => state.company.companies)
+
   useEffect(() => {
-    dispatch(updateSelectedEmployeesAsync() as any);
-  }, [companies, dispatch]);
+    dispatch(updateSelectedEmployeesAsync() as any)
+  }, [companies, dispatch])
 
   const [newCompany, setNewCompany] = useState<CompanyForm>({
-    name: "",
-    address: "",
-  });
+    name: '',
+    address: '',
+  })
   const [newEmployee, setNewEmployee] = useState({
     companyId: 0,
-    lastName: "",
-    firstName: "",
-    position: "",
-  });
-  const [showEmployeeForm, setShowEmployeeForm] = useState(false);
+    lastName: '',
+    firstName: '',
+    position: '',
+  })
+  const [showEmployeeForm, setShowEmployeeForm] = useState(false)
 
   const handleAddCompany = () => {
     const newCompanyData = {
@@ -51,65 +50,55 @@ const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
       isSelected: false,
       employees: [],
       employeesCount: 0,
-    };
+    }
 
-    dispatch(addCompany(newCompanyData));
-    setNewCompany({ name: "", address: "" });
-  };
+    dispatch(addCompany(newCompanyData))
+    setNewCompany({ name: '', address: '' })
+  }
 
-  const handleEditCompany = (
-    companyId: number,
-    fieldName: string,
-    value: string | number
-  ) => {
+  const handleEditCompany = (companyId: number, fieldName: string, value: string | number) => {
     const updatedFields: Partial<Company> = {
       id: companyId,
       [fieldName]: value,
-    };
+    }
 
-    dispatch(updateCompany(updatedFields as Company));
-  };
+    dispatch(updateCompany(updatedFields as Company))
+  }
 
   const handleRemoveCompanies = () => {
     const selectedCompanyIds = companies
       .filter((company) => company.isSelected)
-      .map((company) => company.id);
-    dispatch(removeCompanies(selectedCompanyIds));
-  };
+      .map((company) => company.id)
+    dispatch(removeCompanies(selectedCompanyIds))
+  }
 
   const handleSelectCompany = (companyId: number, companySelected: boolean) => {
-    dispatch(toggleSelectCompany({ companyId, isSelected: !companySelected }));
+    dispatch(toggleSelectCompany({ companyId, isSelected: !companySelected }))
     setTimeout(() => {
-      dispatch(updateSelectedEmployeesAsync() as any);
-    }, 0);
-  };
+      dispatch(updateSelectedEmployeesAsync() as any)
+    }, 0)
+  }
 
   const handleSelectAllCompanies = () => {
-    const allSelected = companies.every((company) => company.isSelected);
+    const allSelected = companies.every((company) => company.isSelected)
     companies.forEach((company) => {
-      dispatch(
-        toggleSelectCompany({ companyId: company.id, isSelected: !allSelected })
-      );
-    });
-    dispatch(updateSelectedEmployeesAsync() as any);
-  };
+      dispatch(toggleSelectCompany({ companyId: company.id, isSelected: !allSelected }))
+    })
+    dispatch(updateSelectedEmployeesAsync() as any)
+  }
 
   const handleAddEmployee = (companyId: number) => {
     setNewEmployee({
       companyId,
-      lastName: "",
-      firstName: "",
-      position: "",
-    });
-    setShowEmployeeForm(true);
-  };
+      lastName: '',
+      firstName: '',
+      position: '',
+    })
+    setShowEmployeeForm(true)
+  }
 
   const handleAddEmployeeSubmit = () => {
-    if (
-      newEmployee.companyId &&
-      newEmployee.lastName &&
-      newEmployee.firstName
-    ) {
+    if (newEmployee.companyId && newEmployee.lastName && newEmployee.firstName) {
       const employeeData = {
         id: Date.now(),
         companyId: newEmployee.companyId,
@@ -117,21 +106,21 @@ const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
         firstName: newEmployee.firstName,
         position: newEmployee.position,
         isEmployeeSelected: false,
-      };
+      }
 
-      dispatch(addEmployee(employeeData));
-      dispatch(addEmployeeToCompany(employeeData));
+      dispatch(addEmployee(employeeData))
+      dispatch(addEmployeeToCompany(employeeData))
 
-      setShowEmployeeForm(false);
+      setShowEmployeeForm(false)
       setNewEmployee({
         companyId: 0,
-        lastName: "",
-        firstName: "",
-        position: "",
-      });
-      dispatch(updateSelectedEmployeesAsync() as any);
+        lastName: '',
+        firstName: '',
+        position: '',
+      })
+      dispatch(updateSelectedEmployeesAsync() as any)
     }
-  };
+  }
 
   return (
     <div>
@@ -140,17 +129,13 @@ const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
           type="text"
           placeholder="Название компании"
           value={newCompany.name}
-          onChange={(e) =>
-            setNewCompany({ ...newCompany, name: e.target.value })
-          }
+          onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })}
         />
         <input
           type="text"
           placeholder="Адрес компании"
           value={newCompany.address}
-          onChange={(e) =>
-            setNewCompany({ ...newCompany, address: e.target.value })
-          }
+          onChange={(e) => setNewCompany({ ...newCompany, address: e.target.value })}
         />
         <button className="button" onClick={handleAddCompany}>
           Добавить компанию
@@ -174,26 +159,19 @@ const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
         </thead>
         <tbody>
           {companies.slice(0, visibleCompanies).map((company) => (
-            <tr
-              key={company.id}
-              className={company.isSelected ? "selected" : ""}
-            >
+            <tr key={company.id} className={company.isSelected ? 'selected' : ''}>
               <td>
                 <input
                   type="checkbox"
                   checked={company.isSelected}
-                  onChange={() =>
-                    handleSelectCompany(company.id, company.isSelected)
-                  }
+                  onChange={() => handleSelectCompany(company.id, company.isSelected)}
                 />
               </td>
               <td>
                 <input
                   type="text"
                   value={company.name}
-                  onChange={(e) =>
-                    handleEditCompany(company.id, "name", e.target.value)
-                  }
+                  onChange={(e) => handleEditCompany(company.id, 'name', e.target.value)}
                 />
               </td>
               <td>{company.employees.length}</td>
@@ -201,16 +179,11 @@ const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
                 <input
                   type="text"
                   value={company.address}
-                  onChange={(e) =>
-                    handleEditCompany(company.id, "address", e.target.value)
-                  }
+                  onChange={(e) => handleEditCompany(company.id, 'address', e.target.value)}
                 />
               </td>
               <td>
-                <button
-                  className="button"
-                  onClick={() => handleAddEmployee(company.id)}
-                >
+                <button className="button" onClick={() => handleAddEmployee(company.id)}>
                   Добавить сотрудника
                 </button>
               </td>
@@ -224,25 +197,19 @@ const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
             type="text"
             placeholder="Фамилия"
             value={newEmployee.lastName}
-            onChange={(e) =>
-              setNewEmployee({ ...newEmployee, lastName: e.target.value })
-            }
+            onChange={(e) => setNewEmployee({ ...newEmployee, lastName: e.target.value })}
           />
           <input
             type="text"
             placeholder="Имя"
             value={newEmployee.firstName}
-            onChange={(e) =>
-              setNewEmployee({ ...newEmployee, firstName: e.target.value })
-            }
+            onChange={(e) => setNewEmployee({ ...newEmployee, firstName: e.target.value })}
           />
           <input
             type="text"
             placeholder="Должность"
             value={newEmployee.position}
-            onChange={(e) =>
-              setNewEmployee({ ...newEmployee, position: e.target.value })
-            }
+            onChange={(e) => setNewEmployee({ ...newEmployee, position: e.target.value })}
           />
           <button className="button" onClick={() => handleAddEmployeeSubmit()}>
             Submit
@@ -250,7 +217,7 @@ const CompanyTable: React.FC<CompanyTableProps> = ({visibleCompanies}) =>{
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CompanyTable;
+export default CompanyTable
